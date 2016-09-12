@@ -50,6 +50,14 @@ angular.module("ngCordova.plugins.nativeStorage", [])
       error(err); 
     }
   };
+  function clearFromLocalStorage(success, error) {
+    try {
+      $window.localStorage.clear();
+      success(null);
+    } catch ( err ) {
+      error(err);
+    }
+  }
 
   return {
     remove: function(reference) {
@@ -76,6 +84,15 @@ angular.module("ngCordova.plugins.nativeStorage", [])
         getFromLocalStorage(reference, function(result) {q.resolve(result);}, function(error) {q.reject(error);});
       } else {
         NativeStorage.getItem(reference, function(result) {q.resolve(result);}, function(error) {q.reject(error);});
+      }
+      return q.promise;
+    },
+    clear: function() {
+      if (isInBrowser()) {
+          clearFromLocalStorage(function(result) {q.resolve(result);}, function(error) {q.reject(error);});
+      } else {
+          NativeStorage.clear(function(result) {q.resolve(result);}, function(error) {q.reject(error);
+          });
       }
       return q.promise;
     }
